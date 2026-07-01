@@ -1,0 +1,121 @@
+plugins {
+	id 'java-library'
+	id 'maven-publish'
+	id 'idea'
+	id 'net.neoforged.moddev' version '2.0.140'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+	distributionType = Wrapper.DistributionType.BIN
+}
+
+version = "${minecraft_version}-${mod_version}"
+group = mod_group_id
+
+base {
+	archivesName = project.archives_base_name
+}
+
+java {
+	toolchain.languageVersion = JavaLanguageVersion.of(21)
+	withSourcesJar()
+}
+
+neoForge {
+	version = project.neo_version
+
+	parchment {
+		mappingsVersion = project.parchment_mappings_version
+		minecraftVersion = project.parchment_minecraft_version
+	}
+
+	runs {
+		configureEach {
+			systemProperty 'forge.logging.markers', 'REGISTRIES'
+			logLevel = org.slf4j.event.Level.DEBUG
+		}
+
+		client {
+			client()
+		}
+
+		server {
+			server()
+			programArgument '--nogui'
+		}
+	}
+
+	mods {
+		"${mod_id}" {
+			sourceSet(sourceSets.main)
+		}
+	}
+}
+
+configurations {
+	runtimeClasspath.extendsFrom localRuntime
+}
+
+repositories {
+	maven {
+		url = "https://maven.blamejared.com"
+		content { includeGroup("mezz.jei") }
+	}
+	maven {
+		url = "https://maven.theillusivec4.top/"
+		content { includeGroup("top.theillusivec4.curios") }
+	}
+	maven {
+		url = "https://api.modrinth.com/maven"
+		content { includeGroup("maven.modrinth") }
+	}
+}
+
+dependencies {
+	compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
+	localRuntime "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
+
+	compileOnly("maven.modrinth:malum:${malum_version}") { transitive = false }
+	compileOnly("maven.modrinth:lodestonelib:${lodestone_version}") { transitive = false }
+
+	localRuntime("maven.modrinth:malum:${malum_version}") { transitive = false }
+	localRuntime("maven.modrinth:lodestonelib:${lodestone_version}") { transitive = false }
+	localRuntime("top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1") { transitive = false }
+}
+
+tasks.withType(ProcessResources).configureEach {
+	var replaceProperties = [
+		version             : version,
+		mod_id              : mod_id,
+		mod_name            : mod_name,
+		mod_license         : mod_license,
+		mod_version         : mod_version,
+		mod_authors         : mod_authors,
+		mod_description     : mod_description,
+		mod_url             : mod_url,
+		pack_format         : pack_format,
+		minecraft_version   : minecraft_version,
+		minecraft_version_range: minecraft_version_range,
+		neo_version         : neo_version,
+		neo_version_range   : neo_version_range,
+		loader_version_range: loader_version_range
+	]
+
+	inputs.properties replaceProperties
+
+	filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
+		expand replaceProperties
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	options.compilerArgs << '-Xlint:deprecation'
+}
+
+idea {
+	module {
+		downloadSources = true
+		downloadJavadoc = true
+	}
+}

@@ -1,49 +1,106 @@
-# Gradle
+# ===== Gradle =====
 .gradle/
 build/
+out/
+bin/
+libs/
+!gradle/wrapper/gradle-wrapper.jar
 
-# IntelliJ
+# Gradle properties (local overrides)
+gradle.properties.local
+local.properties
+
+# ===== IDE - IntelliJ IDEA =====
 .idea/
 *.iml
 *.ipr
 *.iws
-out/
+atlassian-ide-plugin.xml
 
-# Eclipse
-.classpath
-.project
-.settings/
+# ===== IDE - Eclipse =====
 .eclipse/
-bin/
+.project
+.classpath
+.settings/
+*.launch
+.metadata/
 
-# VS Code
+# ===== IDE - VS Code =====
 .vscode/
-.history/
+*.code-workspace
 
-# NeoForge dev runs
-run/
-run-data/
-run-server/
-run-gametest/
-run-client.log
+# ===== IDE - NetBeans =====
+nbproject/
+nbbuild/
+nbdist/
+nbactions.xml
+nb-configuration.xml
 
-# Generated resources cache
-src/generated/resources/.cache
-
-# Logs
-logs/
-*.log
-
-# OS junk
+# ===== OS Specific =====
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 
-# Markdown — track only README, LICENSE, and metadata/changelogs/*.md (case-insensitive)
+# ===== Minecraft Mod Development =====
+# Runtime directories
+run/
+runs/
+logs/
+crash-reports/
+saves/
+
+# NeoForge/Forge specific
+*.log
+*.log.gz
+debug.log
+latest.log
+
+# Mod output
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Caches
+.cache/
+*.cache
+
+# ===== Java =====
+*.class
+hs_err_pid*
+replay_pid*
+
+# ===== Secrets & Config =====
+# Never commit tokens or secrets
+.env
+.env.local
+*.env
+secrets.properties
+tokens.properties
+
+# ===== Misc =====
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Local testing
+test-output/
+local/
+
+# ===== Markdown Files =====
 *.md
-*.MD
-!README.md
-!README.MD
 !LICENSE.md
-!LICENSE.MD
+!README.md
 !metadata/changelogs/*.md
-!metadata/changelogs/*.MD
+!src/main/resources/assets/justenoughspirits/**/*.md
